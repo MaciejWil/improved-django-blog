@@ -1,0 +1,7 @@
+{% extends 'blog/base.html' %}
+{% load bootstrap %}
+{% block content %}
+
+    {% include "blog/_posts.html" with object_list=posts%}
+
+{% endblock %}

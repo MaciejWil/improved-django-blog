@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load bootstrap %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blog</title>
+
+    <!-- Bootstrap core CSS -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{% static 'css/css_final.css' %}">
+  </head>
+<body>
+<header class="main-header">
+  <h2 class="main-title"><a href="{% url 'post_list' %}">Maciej Will</a></h2>
+  <div class="aaa">
+      <h6 class="second-title">The best place for aspiring programmers</h6>
+  </div>
+  <div class="nav-width">
+    <ul class="main-nav">
+      <li><a href="{% url 'post_list' %}">home</a></li>
+      <li><a class="scroll-down" href="#">about</a></li>
+      <li><a class="scroll-down" href="#">contact</a></li>
+      {% if user.is_superuser %}
+        <li>
+          <a href="{% url 'post_new' %}">New Post</a>
+        </li>
+        <li>
+          <a href="{% url 'post_draft_list' %}">Drafts</a>
+        </li>
+      {% endif %}
+      {% if not user.is_authenticated %}
+        <li><a href="{% url 'login' %}">login</a></li>
+        {% else %}
+        <li><a href="{% url 'logout' %}">logout</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</header>
+
+<div class="custom-container">
+      <div class="row-2">
+
+        {% block content %}
+        {% endblock %}
+    <!-- Sidebar -->
+    <div class="second-col col">
+      <a id="" class="" style="width:10%; padding-bottom:20px;" href="#"><img src="{% static 'img/li.png'%}" class="img-responsive" /></a>
+      <form style="width:90%;" action="{% url 'post_list' %}" method="GET">{% csrf_token %}
+        <input type="text" name="q" class="form-control" placeholder="Search">
+      </form>
+
+        <hr>
+        <div class="side-bar">
+          <h4 style="padding-bottom:10px;">LATEST POSTS</h4>
+          {% for pop in latest_posts %}
+          {% if pop.image %}
+          <div class="pbtthumbimg2">
+            <a href="{{ pop.get_absolute_url }}"><img src="{{ pop.image.url }}" class="img-responsive" /></a>
+          </div>
+          {% endif %}
+          <div style=""><a href="{{ pop.get_absolute_url }}">{{ pop.title }}</a><br></div><br><br><br>
+          {% endfor %}
+          <hr>
+          <h4>CATEGORIES</h4>
+          {% for cat in categories %}
+          <div style="margin-bottom:14px;"><a href="{{ cat.get_absolute_url }}">{{ cat.title }}</a><br></div>
+          {% endfor %}
+        </div>
+    </div>
+  </div>
+</div>
+    <!--  -->
+<div class="custom-container">
+  <div class="comments-style">
+
+    <!--  -->
+    {% block comment %}
+    {% endblock %}
+    <!--  -->
+
+  </div>
+  {% if is_paginated %}
+  <div style="text-align:center">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+      {% endif %}
+      {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
+          <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+          <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+      </div>
+  {% endif %}
+</div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-styles">
+        <div class="custom-container">
+          <div class="row-display">
+            <div class="form-col">
+              <h3>CONTACT ME</h3>
+              <form method='POST' action='/contact/'>{% csrf_token %}
+              {{ contact|bootstrap }}
+              <input class='btn btn-default' type='submit' value='Submit' />
+              </form>
+            </div>
+            <div class="about-col">
+            <h3>ABOUT ME</h3>
+            Mel putent quaeque an, ut postea melius denique sit. Officiis sensibus at mea, sea at labitur deserunt. Eam dicam congue soluta ut. Blogger Templates
+            Mel putent quaeque an, ut postea melius denique sit. Officiis sensibus at mea, sea at labitur deserunt. Eam dicam congue soluta ut. Blogger Templates
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="bottom-footer footer-title">
+      <p>Copyright 2017 * Maciej Wilczynski *</p>
+    </div>
+  </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script
+			  src="http://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous"></script>
+
+    <script src="{% static 'js/customjs.js' %}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,67 @@
+{% extends 'blog/base.html' %}
+{% load bootstrap %}
+
+{% block content %}
+<div class="first-col col">
+    <div class="post-container">
+      <h2 class="index-title">{{ post.title }}</h2>
+      {% if post.image %}
+      <div class="pbtthumbimg1">
+        <img src="{{ post.image.url }}" class="img-responsive" />
+      </div>
+      {% endif %}
+      {% if post.published_date %}
+      <div class="entry-meta" style="padding-bottom:20px;">
+        Posted by {{ post.author }} | {{ post.published_date}} | <a href="#">{{ post.comments.count }} comments</a>
+      </div>
+      {% else %}
+          <a class="btn btn-default" href="{% url 'post_publish' slug=post.slug %}">Publish</a>
+      {% endif %}
+      {{ post.text|safe }}<br><br>
+      {% if user.is_authenticated %}
+        <a class="btn btn-default btn-xs" href="{% url 'post_edit' slug=post.slug %}"><span class="glyphicon glyphicon-edit">edit</span></a>
+        <a class="btn btn-default btn-xs" href="{% url 'post_remove' slug=post.slug %}"><span class="glyphicon glyphicon-remove">delete</span></a>
+      {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block comment %}
+{% if post.published_date %}
+    <div class="first-col col no-margin">
+      {% for comment in comments %}
+        {% if user.is_superuser or comment.approved_comments %}
+          {% if not comment.approved_comments %}
+          <div class="container glyphicon-pos">
+              <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove">no</span></a>
+              <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok">ok</span></a>
+                    </div>
+          {% endif %}
+
+
+          <p>{{comment.text|safe}}</p>
+          <p><small>Posted by: <strong>{{comment.author}}</strong> on {{comment.created_date}}</small></p>
+          {% endif %}
+          {% if user.is_superuser %}
+            <a href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+          {% endif %}
+          <hr>
+          {% empty %}
+            <p>No comments posted.</p>
+          {% endfor %}
+
+          <br>
+
+          <h1>New post</h1>
+          <div class="row">
+            <div class="col-md-8">
+              <form method="POST">
+              {% csrf_token %}
+              {{ form|bootstrap }}
+              <button type="submit" class="save btn btn-default">Save</button>
+              </form>
+            </div>
+          </div>
+      </div>
+{% endif %}
+{% endblock %}

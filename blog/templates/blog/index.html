@@ -1,0 +1,29 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% load bootstrap %}
+{% block content %}
+
+    <!-- Posts -->
+    <div class="first-col col">
+      {% for post in object_list %}
+        <div class="post-container">
+          <div class="no-decoration">
+            <a href="{{ post.get_absolute_url }}"><h2 class="index-title">{{ post.title }}</h2></a>
+          </div>
+          {% if post.image %}
+          <div class="pbtthumbimg">
+            <a href="{{ post.get_absolute_url }}"><img src="{{ post.image.url }}" class="img-responsive" /></a>
+          </div>
+          {% endif %}
+          {{ post.text|safe|truncatechars:300 }}
+          <div class="" style="float:right;padding-right:10px;margin-top:10px;">
+            <a href="{{ post.get_absolute_url }}">Read More</a>
+          </div><br>
+          <div class="entry-meta">
+            Posted by {{ post.author }} | {{ post.published_date|date:'d-m-Y' }} | <a href="{{ post.get_absolute_url }}">{{ post.comments.count }} comments</a>
+          </div>
+      </div>
+    {% endfor %}
+    </div>
+    <!--  -->
+{% endblock %}
