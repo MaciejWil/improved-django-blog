@@ -6,8 +6,6 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 
-# Create your models here.
-
 class Post(models.Model):
     author = models.ForeignKey('auth.User', default=1)
     title = models.CharField(max_length=200)
@@ -51,9 +49,10 @@ def pre_save_post_receiver(sender, instance, *args, **kwargs):
 pre_save.connect(pre_save_post_receiver, sender=Post)
 
 
-
 class Comment(models.Model):
-    post = models.ForeignKey('blog.Post',related_name='comments')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
+    url = models.URLField()
+    post = models.ForeignKey('blog.Post',related_name='comments', null=True, blank=True)
     author = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now())

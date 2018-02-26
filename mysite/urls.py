@@ -26,12 +26,11 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^contact/$', contact, name='contact'),
     url(r'',include('blog.urls')),
-    # url(r'accounts/login/$',views.login,name='login'),
-    # url(r'accounts/logout/$',views.logout,name='logout',kwargs={'next_page':'/'}),
     url(r'^categories/', include('blog.urls_categories')),
     url(r'^login/$', views.login, name='login'),
     url(r'^logout/',LogoutView.as_view(), name='logout'),
     url(r'^signup/$', SignUp.as_view(), name='signup'),
+    url(r'^api/blog/', include('blog.api.urls')),
 ]
 
 if settings.DEBUG:

@@ -20,7 +20,7 @@
             <a href="{{ post.get_absolute_url }}">Read More</a>
           </div><br>
           <div class="entry-meta">
-            Posted by {{ post.author }} | {{ post.published_date|date:'d-m-Y' }} | <a href="{{ post.get_absolute_url }}">{{ post.comments.count }} comments</a>
+            Posted by {{ post.author }} | {{ post.published_date|date:'d-m-Y' }} | <a href="{{ post.get_absolute_url }}"><span class="comment-count-list">{{ post.comments.count }}</span> comments</a>
           </div>
       </div>
     {% endfor %}
